@@ -57,7 +57,7 @@ void mylog(int level, const char* fmt, ...) {
     va_start(arg_ptr, fmt);                                                      
     vprintf(fmt, arg_ptr);
     printf("\n");                                                 
-    va_end(arg_ptr); 
+    va_end(arg_ptr);
   }
 }
 
@@ -75,7 +75,7 @@ void *check_grid(void* data) {
 
   int row_dest = params->row + params->d_row;
   int col_dest = params->col + params->d_col;
-  mylog(ERROR, "Check dest (%d, %d)", row_dest, col_dest);
+  mylog(INFO, "Check dest (%d, %d)", row_dest, col_dest);
   int i;
   int j;
   for (i = params->row; i < row_dest; i++) {
