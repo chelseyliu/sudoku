@@ -78,6 +78,25 @@ void check_grid(int row, int col, int d_row, int d_col) {
   // TODO - record valid.
 }
 
+// Trigger row, col and 3x3 grid checking.
+void trigger_all_checking() {
+  int row = 0;
+  int col = 0;
+  for (row = 0; row < 9; ++row) {
+    for (col = 0; col < 9; ++col) {
+      if (row == 0) { // checking col;
+        mylog(DEBUG, "Position (%d, %d) Check col", row, col);
+      }
+      if (col == 0) { // Checking row;
+        mylog(DEBUG, "Position (%d, %d) Check row", row, col);
+      }
+      if (row % 3 == 0 && col % 3 == 0) {
+        mylog(DEBUG, "Position (%d, %d) Check 3x3 grid", row, col);
+      }
+    }
+  }
+}
+
 void fill_input() {
   mylog(DEBUG, "Filling input.");
   int i, j;
@@ -99,7 +118,7 @@ typedef struct {
 
 int main(void) {
   fill_input();
-  mylog(DEBUG, "%d", input[0][0]);
+  trigger_all_checking();
   return 0;
 }
 
