@@ -21,7 +21,7 @@ int DEFAULT_INPUT[9][9] = {
 #define FATAL 3
 
 // ========= Paragram Paramters ========== //
-int LOG_LEVLE = DEBUG;
+int LOG_LEVLE = INFO;
 // ======================================= //
 
 // TODO - change it to all zeros and fill it by the input file.
@@ -29,6 +29,8 @@ int LOG_LEVLE = DEBUG;
 // this 2d array.
 int input[9][9] = {{0}};
 
+// Current valid result. totally 27 checks.
+int curr_valid = 0;
 
 // Custom Log function. 
 // Only log the message whose log level >= LOG_LEVEL.
@@ -51,31 +53,35 @@ void check_grid(int row, int col, int d_row, int d_col) {
   }
   // A array to count freq of each number.
   // seen[i] -> freq of number i + 1
-  int seen[] = {0};
+  int seen[9] = {0};
 
   int row_dest = row + d_row;
   int col_dest = col + d_col;
-  for (; row < row_dest; ++row) {
-    for (; col < col_dest; ++ row) {
-      if (row < 0 || row >= 9) {
-        mylog(ERROR, "Invalid row index %d", row);
+  mylog(ERROR, "Check dest (%d, %d)", row_dest, col_dest);
+  int i;
+  int j;
+  for (i = row; i < row_dest; i++) {
+    for (j = col; j < col_dest; j++) {
+      if (i < 0 || i >= 9) {
+        mylog(ERROR, "Invalid row index %d", i);
         return;
       };
-      if (col < 0 || col >= 9) {
-        mylog(ERROR, "Invalid col index %d", col);
+      if (j < 0 || j >= 9) {
+        mylog(ERROR, "Invalid col index %d", j);
         return;
       };
-      seen[input[row][col] - 1]++;
+      seen[input[i][j] - 1]++;
     }
   }
   int valid = 1;
-  int i;
   for (i = 0; i < 9; ++i) {
     if (seen[i] != 1) {
       valid = 0;
     }
   }
   // TODO - record valid.
+  mylog(INFO, "Check is %d", valid);
+  curr_valid += valid;
 }
 
 // Trigger row, col and 3x3 grid checking.
@@ -86,12 +92,15 @@ void trigger_all_checking() {
     for (col = 0; col < 9; ++col) {
       if (row == 0) { // checking col;
         mylog(DEBUG, "Position (%d, %d) Check col", row, col);
+        check_grid(row, col, 9, 1);
       }
       if (col == 0) { // Checking row;
         mylog(DEBUG, "Position (%d, %d) Check row", row, col);
+        check_grid(row, col, 1, 9);
       }
       if (row % 3 == 0 && col % 3 == 0) {
         mylog(DEBUG, "Position (%d, %d) Check 3x3 grid", row, col);
+        check_grid(row, col, 3, 3);
       }
     }
   }
@@ -119,6 +128,7 @@ typedef struct {
 int main(void) {
   fill_input();
   trigger_all_checking();
+  mylog(INFO, "Total valid: %d", curr_valid);
   return 0;
 }
 
