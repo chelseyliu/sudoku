@@ -42,6 +42,42 @@ void mylog(int level, const char* fmt, ...) {
   }
 }
 
+// Check a grid of input[row : row + d_dow][col : col + d_col]
+// d_row * d_col should equal to 9.
+void check_grid(int row, int col, int d_row, int d_col) {
+  if (d_row * d_col != 9) {
+    mylog(ERROR, "Invalid d_row %d and d_col %d", d_row, d_col);
+    return;
+  }
+  // A array to count freq of each number.
+  // seen[i] -> freq of number i + 1
+  int seen[] = {0};
+
+  int row_dest = row + d_row;
+  int col_dest = col + d_col;
+  for (; row < row_dest; ++row) {
+    for (; col < col_dest; ++ row) {
+      if (row < 0 || row >= 9) {
+        mylog(ERROR, "Invalid row index %d", row);
+        return;
+      };
+      if (col < 0 || col >= 9) {
+        mylog(ERROR, "Invalid col index %d", col);
+        return;
+      };
+      seen[input[row][col] - 1]++;
+    }
+  }
+  int valid = 1;
+  int i;
+  for (i = 0; i < 9; ++i) {
+    if (seen[i] != 1) {
+      valid = 0;
+    }
+  }
+  // TODO - record valid.
+}
+
 void fill_input() {
   mylog(DEBUG, "Filling input.");
   int i, j;
