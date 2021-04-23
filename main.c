@@ -75,7 +75,7 @@ void *check_grid(void* data) {
 
   int row_dest = params->row + params->d_row;
   int col_dest = params->col + params->d_col;
-  mylog(INFO, "Check dest (%d, %d)", row_dest, col_dest);
+  mylog(DEBUG, "Check dest (%d, %d)", row_dest, col_dest);
   int i;
   int j;
   for (i = params->row; i < row_dest; i++) {
@@ -98,7 +98,7 @@ void *check_grid(void* data) {
     }
   }
   // TODO - record valid.
-  mylog(INFO, "Check is %d", valid);
+  mylog(DEBUG, "Check is %d", valid);
   curr_valid += valid;
   thread_valid[params->thread_id] = valid;
 }
@@ -178,6 +178,10 @@ int main(void) {
 
   fill_input();
   int valid = trigger_all_checking_parallel();
-  mylog(INFO, "Final result valid: %d", valid);
+  if (valid) {
+    mylog(INFO, "Congratulations, the sudoku board is valid!");
+  } else {
+    mylog(INFO, "The given sudoku board is invalid, please fix by the give hint on above.");
+  }
   return 0;
 }
