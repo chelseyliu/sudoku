@@ -6,19 +6,6 @@
 
 
 
-// TODO - delete this
-// int DEFAULT_INPUT[9][9] = {
-// 	{6, 2, 4, 5, 3, 9, 1, 8, 7},
-// 	{5, 1, 9, 7, 2, 8, 6, 3, 4},
-// 	{8, 3, 7, 6, 1, 4, 2, 9, 5},
-// 	{1, 4, 3, 8, 6, 5, 7, 2, 9},
-// 	{9, 5, 8, 2, 4, 7, 3, 6, 1},
-// 	{7, 6, 2, 3, 9, 1, 4, 5, 8},
-// 	{3, 7, 1, 9, 5, 6, 8, 4, 2},
-// 	{4, 9, 6, 1, 8, 2, 5, 7, 3},
-// 	{2, 8, 5, 4, 7, 3, 9, 1, 6}
-// };
-
 int DEFAULT_INPUT[9][9] = {
 	{6, 2, 4, 5, 3, 9, 1, 8, 7},
 	{5, 1, 9, 7, 2, 8, 6, 3, 4},
@@ -28,7 +15,7 @@ int DEFAULT_INPUT[9][9] = {
 	{7, 6, 2, 3, 9, 1, 4, 5, 8},
 	{3, 7, 1, 9, 5, 6, 8, 4, 2},
 	{4, 9, 6, 1, 8, 2, 5, 7, 3},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	{2, 8, 5, 4, 7, 3, 9, 1, 6}
 };
 
 // LOG level.
@@ -113,7 +100,13 @@ void *check_grid(void* data) {
   curr_valid += valid;
   thread_valid[params->thread_id] = valid;
   if (valid == 0) {
-    mylog(INFO, "Hint: Found invalid number in input[%d : %d][%d : %d]", params->row, params->row + params->d_row, params->col, params->col + params->d_col);
+    if (params->d_row == 1) {
+      mylog(INFO, "Hint: Found invalid number in row %d", params->row + 1);
+    } else if (params->d_col == 1) {
+      mylog(INFO, "Hint: Found invalid number in column %d", params->col + 1);
+    } else {
+      mylog(INFO, "Hint: Found invalid number in 3x3 grid that left top corner is [%d][%d]", params->row + 1, params->col + 1);
+    }
   }
 }
 
@@ -188,7 +181,8 @@ void fill_input() {
 
 
 
-int main(void) {
+int main(int argc, char *argv[]) {
+  mylog(INFO, "Read input sudoku solution from %s", argv[1]);
 
   fill_input();
   int valid = trigger_all_checking_parallel();
