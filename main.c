@@ -109,10 +109,12 @@ void *check_grid(void* data) {
       valid = 0;
     }
   }
-  // TODO - record valid.
   mylog(DEBUG, "Check is %d", valid);
   curr_valid += valid;
   thread_valid[params->thread_id] = valid;
+  if (valid == 0) {
+    mylog(INFO, "Hint: Found invalid number in input[%d : %d][%d : %d]", params->row, params->row + params->d_row, params->col, params->col + params->d_col);
+  }
 }
 
 // Trigger row, col and 3x3 grid checking parallely.
@@ -190,7 +192,6 @@ int main(void) {
 
   fill_input();
   int valid = trigger_all_checking_parallel();
-  mylog(INFO, "valid=%d", valid);
   if (valid) {
     mylog(INFO, "Congratulations, the sudoku board is valid!");
   } else {
