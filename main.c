@@ -8,7 +8,7 @@
 
 int DEFAULT_INPUT[9][9] = {
 	{6, 2, 4, 5, 3, 9, 1, 8, 7},
-	{5, 1, 9, 7, 2, 8, 6, 3, 4},
+	{5, 1, 7, 7, 2, 8, 6, 3, 4},
 	{8, 3, 7, 6, 1, 4, 2, 9, 5},
 	{1, 4, 3, 8, 6, 5, 7, 2, 9},
 	{9, 5, 8, 2, 4, 7, 3, 6, 1},
@@ -26,7 +26,7 @@ int DEFAULT_INPUT[9][9] = {
 #define NUM_THREADS 27
 
 // ========= Paragram Paramters ========== //
-const int LOG_LEVLE = INFO;
+const int LOG_LEVLE = ERROR;
 // ======================================= //
 
 /* structure for passing data to threads */ 
@@ -182,14 +182,18 @@ void fill_input() {
 
 
 int main(int argc, char *argv[]) {
-  mylog(INFO, "Read input sudoku solution from %s", argv[1]);
-
   fill_input();
-  int valid = trigger_all_checking_parallel();
-  if (valid) {
-    mylog(INFO, "Congratulations, the sudoku board is valid!");
-  } else {
-    mylog(INFO, "The given sudoku board is invalid, please fix by the give hint on above.");
+  int i;
+  clock_t start=clock();
+  for (i = 0; i < 10000; i++) {
+    int valid = trigger_all_checking_parallel();
+    if (valid) {
+      mylog(INFO, "Congratulations, the sudoku solution is valid!");
+    } else {
+      mylog(INFO, "The given sudoku solution is invalid, please correct by the give hint on above.");
+    }
   }
+  clock_t end=clock();
+  printf("Time for excution with single threads:%f seconds\n", (double)(end-start)/CLOCKS_PER_SEC);
   return 0;
 }
